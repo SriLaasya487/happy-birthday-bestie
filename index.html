@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy 19th Birthday! ✨</title>
+    <style>
+        /* --- Google Fonts --- */
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Quicksand:wght@400;600&display=swap');
+
+        /* --- Global Styles --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #ffe5ec, #ffc2d1, #f0e6ff);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            color: #4a4a4a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- Main Card Container --- */
+        .card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px 30px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(255, 182, 193, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-family: 'Fredoka', sans-serif;
+            color: #ff6b8b;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px #fff;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #8e7cc3;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        .message-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 16px;
+            font-size: 1rem;
+            line-height: 1.6;
+            text-align: left;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            border-left: 4px solid #ffb6c1;
+        }
+
+        /* --- Gift Bombs Section --- */
+        .bomb-section-title {
+            font-family: 'Fredoka', sans-serif;
+            color: #8e7cc3;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        .bomb-container {
+            max-width: 600px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        /* Responsive grid for smaller screens */
+        @media (max-width: 480px) {
+            .bomb-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* --- Individual Gift Bomb Design --- */
+        .gift-bomb {
+            background: white;
+            border: 2px solid #ffc2d1;
+            border-radius: 16px;
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(255, 182, 193, 0.2);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .gift-bomb:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 107, 139, 0.3);
+            background: #ffe5ec;
+        }
+
+        .bomb-icon {
+            font-size: 1.8rem;
+            margin-bottom: 2px;
+            transition: transform 0.2s;
+        }
+
+        .bomb-number {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.9rem;
+            color: #ff6b8b;
+            font-weight: bold;
+        }
+
+        /* Opened state for bombs */
+        .gift-bomb.opened {
+            background: #e8dbff;
+            border-color: #b39ddb;
+            transform: none !important;
+            box-shadow: none;
+        }
+        .gift-bomb.opened .bomb-icon {
+            transform: scale(0.9);
+            opacity: 0.7;
+        }
+        .gift-bomb.opened .bomb-number {
+            color: #7e57c2;
+        }
+
+        /* --- Modal Popup System --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 24px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 3px solid #ffc2d1;
+            transform: scale(0.7);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-gift-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            animation: bounce 1s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+
+        .modal-title {
+            font-family: 'Fredoka', sans-serif;
+            color: #ff6b8b;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .modal-text {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        /* For optional images inside virtual gifts */
+        .modal-image {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 2px dashed #ffc2d1;
+        }
+
+        .close-btn {
+            font-family: 'Fredoka', sans-serif;
+            background: #ff6b8b;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 107, 139, 0.2);
+        }
+
+        .close-btn:hover {
+            background: #ff5276;
+        }
+
+        /* --- Floating background items --- */
+        .heart {
+            position: fixed;
+            font-size: 1.5rem;
+            animation: floatUp 3s linear infinite;
+            opacity: 0;
+            bottom: -50px;
+            z-index: 999;
+            pointer-events: none;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-110vh) scale(1.2) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Message Card -->
+    <div class="card">
+        <h1>Happy 19th Birthday! ✨</h1>
+        <div class="subtitle">To my bestie 💕</div>
+
+        <div class="message-box">
+            <p>Hey Bestie! 💌</p>
+            <br>
+            <p>Welcome to your official 19th Birthday Portal! Because you're turning 19, I have hidden <b>19 Virtual Gift Bombs</b> for you below.</p>
+            <br>
+            <p>Click on each one to detonate it and unlock a mini-gift. Open them all! 🎉</p>
+        </div>
+    </div>
+
+    <!-- Gift Bombs Section -->
+    <h2 class="bomb-section-title">Tap to Pop the 19 Gifts! 💣💗</h2>
+    <div class="bomb-container" id="bombGrid">
+        <!-- Generated by JavaScript dynamically -->
+    </div>
+
+    <!-- The Popup Modal Layout -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="modal-gift-icon" id="modalIcon">🎁</div>
+            <h3 class="modal-title" id="modalTitle">Gift Unlocked!</h3>
+            <div id="modalMediaContainer"></div> <!-- For pictures if you want to add them -->
+            <p class="modal-text" id="modalText">Here goes the custom virtual gift message...</p>
+            <button class="close-btn" onclick="closeModal()">Close & Keep Exploring ✨</button>
+        </div>
+    </div>
+
+    <script>
+        const virtualGifts = [
+            {title:"Gift #1: Open Your Birthday Card! 💌", text: "Happy 19th Birthday to my favorite human! 🥳✨💕🌸",icon: "💌"},
+            {title:"Gift #2: A Virtual Box of Chocolates! 🍫",text: "Since I can't send real chocolates through the computer screen, here is a digital box of your absolute favorites! 🍬✨ Happy sweet 19! 👑🧸", icon: "🍫"},
+            {title:"Gift #3: Lifetime Bestie Pass 🎟️", text: "Valid forever. Grants you 24/7 access to rant, cry, or send me random reels at 3:00 AM.", icon: "🎟️" },
+            {title:"Gift #4: Infinite Hype Pass 👑", text: "You are literal perfection. Consider this a permanent reminder that you excel at everything you do!", icon: "👑" },
+            {title:"Gift #5: No-Questions-Asked Vent Session 🗣️", text: "You can hop on a phone call and scream about whatever is annoying you. I will just listen and agree.", icon: "🗣️" },
+            {title:"Gift #6: Throwback Memory 📸", text: "Remember the time we finally went out together just the two of us", icon: "✨" },
+            {title:"Gift #7: Secret Manifestation 🌟", text: "I am officially wishing that your 19th year makes all your wishes come true", icon: "🌟" },
+            {title:"Gift #8: The Ultimate Compliment 💖", text: "You have the kindest soul and the absolute funniest sense of humor. Never change.", icon: "💖" },
+            {title:"Gift #9: A Virtual Bouquet of Tulips 🌷", text: "Since real flowers wither, here is an eternal digital bouquet of pastel tulips for your room aesthetic! They will stay perfectly fresh and pretty forever, just like our friendship.💐💕", icon: "🌷"},
+            {title: "Gift #10: Midnight Birthday Wish 🌌", text: "Look outside or close your eyes right now! I am sending a massive birthday wish into the universe for you. May your 19th year bring you nothing but peace, laughter and incredible opportunities🌙✨",icon: "🌙"},
+            {title: "Gift #11: A Promise of Sparkle 🌸✨",text: "Every birthday outfit needs the perfect accessory! This bomb unlocks a virtual gorgeous, dainty silver bracelet Happy 19th! 🎀💍", icon: "💍"},
+            {title: "Gift #12: A Cute Aesthetic Tote Bag 🛍️✨", text: "This bomb unlocks a virtual super cute, aesthetic canvas tote bag. 🌸",icon: "🛍️"},
+            {title: "Gift #13: A Dainty Aesthetic Jewelry Piece ✨", text: "You can't have a 19th birthday without a little sparkle!Get ready to shine, birthday queen! 💎🩰", icon: "💎" },
+            {title: "Gift #14: Something Made Just For You 🥺✨",text: "This bomb unlocks a virtual completely custom, personalized keepsake!It's unique, it's personal, and it's a reminder that you're stuck with me forever.🎁📸",icon: "🎀"},
+            {title: "Gift #15: A Jar of 365 Handwritten Letters 🍯✍️",text: "This bomb unlocks the most sentimental gift of all—a physical, beautifully decorated glass jar filled with tiny, colorful, handwritten letters, inside jokes, and daily reminders from me to you!Consider this an endless supply of bestie love wrapped up in a jar! 🌸💌", icon: "🍯"},
+            {title: "Gift #16: An Aesthetic Mini Photo Frame 🖼️✨",text: "This bomb unlocks a beautiful, aesthetic mini photo frame made just for your desk or nightstand!Consider it a permanent little piece of bestie energy for your room! 🌸📸",icon: "🖼️"},
+            {title: "Gift #17: A Cozy Scented Candle 🕯️✨", text: "This bomb unlocks the ultimate aesthetic room essential—a premium scented candle!",icon: "🕯️"},
+            {title: "Gift #18: A Cute Mini House Plant 🪴✨",text: "This bomb unlocks the most adorable, aesthetic desk companion—a live mini house plant!Just like our friendship, it's going to grow beautifully! 🌸🍃",icon: "🪴"},
+            {title: "Gift #19: The Grand Finale 🎂", text: "Happy 19th Birthday, Bestie! May your day be filled with lots of real gifts, sweet cake, and unforgettable moments!", icon: "🎂" }
+        ];
+
+        // 2. Dynamically generate the 19 bombs in the grid
+        const bombGrid = document.getElementById('bombGrid');
+        
+        for (let i = 1; i <= 19; i++) {
+            const bomb = document.createElement('div');
+            bomb.classList.add('gift-bomb');
+            bomb.setAttribute('id', `bomb-${i}`);
+            bomb.onclick = () => openGift(i);
+            
+            bomb.innerHTML = `
+                <div class="bomb-icon">💗</div>
+                <div class="bomb-number">#${i}</div>
+            `;
+            bombGrid.appendChild(bomb);
+        }
+
+        // 3. Open Modal / Pop Bomb Function
+        function openGift(number) {
+            const giftIndex = number - 1;
+            const giftData = virtualGifts[giftIndex];
+            
+            // Mark the bomb as opened visually
+            const clickedBomb = document.getElementById(`bomb-${number}`);
+            clickedBomb.classList.add('opened');
+            clickedBomb.querySelector('.bomb-icon').innerText = '💥';
+
+            // Populate Modal Content
+            document.getElementById('modalIcon').innerText = giftData.icon;
+            document.getElementById('modalTitle').innerText = giftData.title;
+            document.getElementById('modalText').innerText = giftData.text;
+
+            // Trigger the floating heart burst animation
+            burstHearts();
+
+            // Open the Modal Overlay
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        // 4. Close Modal Function
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        // 5. Aesthetic Heart Burst Effect
+        function burstHearts() {
+            const heartEmojis = ['💖', '✨', '🌸', '🎈', '🥰', '🧁'];
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.innerText = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                    
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's'; 
+                    
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 3000);
+                }, i * 80);
+            }
+        }
+    </script>
+</body>
+</html>
